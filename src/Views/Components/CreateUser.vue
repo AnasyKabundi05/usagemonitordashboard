@@ -6,7 +6,7 @@ const email = ref("");
 const output = ref("");
 
 async function createUser() {
-  const response = await fetch("http://localhost:8080/api/user/register", {
+  const response = await fetch("http://35.172.27.21:8080/api/user/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -18,6 +18,7 @@ async function createUser() {
   const data = await response.json();
   output.value = JSON.stringify(data, null, 2);
 }
+
 </script>
 
 <template>
