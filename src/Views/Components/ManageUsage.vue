@@ -36,6 +36,16 @@ async function addAppliance() {
   }
 }
 
+/* ------------------ ADD USAGE LOG ------------------ */
+const applianceId = ref("");
+const hoursUsed = ref("");
+const date = ref("");
+
+const usageSuccess = ref("");
+const usageError = ref("");
+
+const recommendations = ref([]);
+
 async function addUsage() {
   usageSuccess.value = "";
   usageError.value = "";
@@ -57,48 +67,6 @@ async function addUsage() {
     usageSuccess.value = `Usage log created (ID: ${usage.usageLogId})`;
 
     const recRes = await fetch(`http://35.172.27.21:8080/api/recommendation/usage/${usage.usageLogId}`);
-    if (recRes.ok) {
-      recommendations.value = await recRes.json();
-    }
-
-  } catch (err) {
-    usageError.value = err.message;
-  }
-
-}
-
-/* ------------------ ADD USAGE LOG ------------------ */
-const applianceId = ref("");
-const hoursUsed = ref("");
-const date = ref("");
-
-const usageSuccess = ref("");
-const usageError = ref("");
-
-const recommendations = ref([]);
-
-async function addUsage() {
-  usageSuccess.value = "";
-  usageError.value = "";
-  recommendations.value = [];
-
-  try {
-    const res = await fetch(`http://smarthome-backend:8080/api/usageLog/appliance/${applianceId.value}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        hoursUsed: Number(hoursUsed.value),
-        date: date.value
-      })
-    });
-
-    if (!res.ok) throw new Error("Failed to add usage log");
-
-    const usage = await res.json();
-    usageSuccess.value = `Usage log created (ID: ${usage.usageLogId})`;
-
-    // ⭐ Fetch recommendation for this usage log
-    const recRes = await fetch(`http://smarthome-backend:8080/api/recommendation/usage/${usage.usageLogId}`);
     if (recRes.ok) {
       recommendations.value = await recRes.json();
     }
