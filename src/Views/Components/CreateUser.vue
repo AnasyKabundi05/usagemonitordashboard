@@ -6,19 +6,27 @@ const email = ref("");
 const output = ref("");
 
 async function createUser() {
-  const response = await fetch("http://35.172.27.21:8080/api/user/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: name.value,
-      email: email.value
-    })
-  });
+  try {
+    const response = await fetch("http://smarthome-backend:8080/api/user/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: name.value,
+        email: email.value
+      })
+    });
 
-  const data = await response.json();
-  output.value = JSON.stringify(data, null, 2);
+    if (!response.ok) {
+      throw new Error("Backend returned an error");
+    }
+
+    const data = await response.json();
+    output.value = JSON.stringify(data, null, 2);
+
+  } catch (err) {
+    output.value = "❌ Failed to reach backend: " + err.message;
+  }
 }
-
 </script>
 
 <template>
@@ -47,7 +55,6 @@ async function createUser() {
 </template>
 
 <style scoped>
-/* Full-page dark blue background */
 :global(body) {
   background-color: #0a1a3a;
   margin: 0;
@@ -55,7 +62,6 @@ async function createUser() {
   color: white;
 }
 
-/* Centered container */
 .container {
   max-width: 500px;
   margin: 60px auto;
@@ -65,18 +71,16 @@ async function createUser() {
   backdrop-filter: blur(6px);
 }
 
-/* Title styling */
 .title {
   display: flex;
   align-items: center;
   font-size: 28px;
   font-weight: bold;
-  color: #ffeb3b; /* yellow lightning bolt color */
+  color: #ffeb3b;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-/* Inputs */
 input {
   display: block;
   width: 100%;
@@ -87,7 +91,6 @@ input {
   outline: none;
 }
 
-/* Green button */
 button {
   background-color: #2ecc71;
   color: white;
@@ -104,7 +107,6 @@ button:hover {
   background-color: #27ae60;
 }
 
-/* Output box */
 pre {
   background: rgba(0, 0, 0, 0.3);
   padding: 12px;
