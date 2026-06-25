@@ -5,9 +5,12 @@ const name = ref("");
 const email = ref("");
 const output = ref("");
 
+// IMPORTANT: Use EC2 public IP because the browser is NOT inside Docker
+const API_BASE = "http://35.172.27.21:8080";
+
 async function createUser() {
   try {
-    const response = await fetch("http://smarthome-backend:8080/api/user/register", {
+    const response = await fetch(`${API_BASE}/api/user/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -24,7 +27,7 @@ async function createUser() {
     output.value = JSON.stringify(data, null, 2);
 
   } catch (err) {
-    output.value = "❌ Failed to reach backend: " + err.message;
+    output.value = " Failed to reach backend: " + err.message;
   }
 }
 </script>

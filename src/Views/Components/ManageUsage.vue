@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue";
 
+// IMPORTANT: Browser must call backend via EC2 public IP
+const API_BASE = "http://35.172.27.21:8080";
+
 /* ------------------ ADD APPLIANCE ------------------ */
 const userId = ref("");
 const appName = ref("");
@@ -16,7 +19,7 @@ async function addAppliance() {
   applianceError.value = "";
 
   try {
-    const res = await fetch(`http://smarthome-backend:8080/api/appliance/user/${userId.value}`, {
+    const res = await fetch(`${API_BASE}/api/appliance/user/${userId.value}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -52,7 +55,7 @@ async function addUsage() {
   recommendations.value = [];
 
   try {
-    const res = await fetch(`http://smarthome-backend:8080/api/usageLog/appliance/${applianceId.value}`, {
+    const res = await fetch(`${API_BASE}/api/usageLog/appliance/${applianceId.value}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -66,7 +69,7 @@ async function addUsage() {
     const usage = await res.json();
     usageSuccess.value = `Usage log created (ID: ${usage.usageLogId})`;
 
-    const recRes = await fetch(`http://smarthome-backend:8080/api/recommendation/usage/${usage.usageLogId}`);
+    const recRes = await fetch(`${API_BASE}/api/recommendation/usage/${usage.usageLogId}`);
     if (recRes.ok) {
       recommendations.value = await recRes.json();
     }
@@ -76,6 +79,7 @@ async function addUsage() {
   }
 }
 </script>
+
 
 <template>
   <div class="container">

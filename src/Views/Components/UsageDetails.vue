@@ -8,6 +8,9 @@ const recommendations = ref([]);
 const loading = ref(false);
 const error = ref("");
 
+// IMPORTANT: Browser must call backend via EC2 public IP
+const API_BASE = "http://35.172.27.21:8080";
+
 async function loadAll() {
   loading.value = true;
   error.value = "";
@@ -19,7 +22,7 @@ async function loadAll() {
     if (!usageLogId.value) throw new Error("Please enter a Usage Log ID");
 
     // 1. Load usage log
-    const logRes = await fetch(`http://smarthome-backend:8080/api/usageLog/${usageLogId.value}`);
+    const logRes = await fetch(`${API_BASE}/api/usageLog/${usageLogId.value}`);
     if (!logRes.ok) throw new Error("Usage log not found");
     usageLog.value = await logRes.json();
 
@@ -31,14 +34,14 @@ async function loadAll() {
 
     // 2. Load appliance details
     if (applianceId) {
-      const appRes = await fetch(`http://smarthome-backend:8080/api/appliance/${applianceId}`);
+      const appRes = await fetch(`${API_BASE}/api/appliance/${applianceId}`);
       if (appRes.ok) {
         appliance.value = await appRes.json();
       }
     }
 
-    // 3. Load recommendations for this usage log
-    const recRes = await fetch(`http://smarthome-backend:8080/api/recommendation/${usageLogId.value}`);
+    // 3. Load recommendations
+    const recRes = await fetch(`${API_BASE}/api/recommendation/${usageLogId.value}`);
     if (!recRes.ok) throw new Error("Recommendations not found");
     recommendations.value = await recRes.json();
 
