@@ -22,7 +22,7 @@ async function loadAll() {
     if (!usageLogId.value) throw new Error("Please enter a Usage Log ID");
 
     // 1. Load usage log
-    const logRes = await fetch(`${API_BASE}/usageLog/${usageLogId.value}`);
+    const logRes = await fetch(`${API_BASE}/api/usageLog/${usageLogId.value}`);
     if (!logRes.ok) throw new Error("Usage log not found");
     usageLog.value = await logRes.json();
 
@@ -34,14 +34,14 @@ async function loadAll() {
 
     // 2. Load appliance details
     if (applianceId) {
-      const appRes = await fetch(`${API_BASE}/appliance/${applianceId}`);
+      const appRes = await fetch(`${API_BASE}/api/appliance/${applianceId}`);
       if (appRes.ok) {
         appliance.value = await appRes.json();
       }
     }
 
-    // 3. Load recommendations (FIXED)
-    const recRes = await fetch(`${API_BASE}/recommendation/usage/${usageLogId.value}`);
+    // 3. Load recommendations
+    const recRes = await fetch(`${API_BASE}/api/recommendation/usage/${usageLogId.value}`);
     if (!recRes.ok) throw new Error("Recommendations not found");
     recommendations.value = await recRes.json();
 
