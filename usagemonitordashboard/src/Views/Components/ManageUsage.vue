@@ -19,7 +19,7 @@ async function addAppliance() {
   applianceError.value = "";
 
   try {
-    const res = await fetch(`${API_BASE}/appliance/user/${userId.value}`, {
+    const res = await fetch(`${API_BASE}/api/appliance/user/${userId.value}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -53,7 +53,7 @@ async function loadUsageLogs() {
   usageError.value = "";
 
   try {
-    const res = await fetch(`${API_BASE}/usageLog/user/${userId.value}`);
+    const res = await fetch(`${API_BASE}/api/usageLog/user/${userId.value}`);
     if (!res.ok) throw new Error("Failed to load usage logs");
 
     usageLogs.value = await res.json();
@@ -68,7 +68,7 @@ async function addUsage() {
   recommendations.value = [];
 
   try {
-    const res = await fetch(`${API_BASE}/usageLog/add`, {
+    const res = await fetch(`${API_BASE}/api/usageLog/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -86,8 +86,7 @@ async function addUsage() {
 
     await loadUsageLogs();
 
-    // FIXED: correct backend endpoint
-    const recRes = await fetch(`${API_BASE}/recommendation/usage/${usage.usageLogId}`);
+    const recRes = await fetch(`${API_BASE}/api/recommendation/usage/${usage.usageLogId}`);
     if (recRes.ok) {
       recommendations.value = await recRes.json();
     }
